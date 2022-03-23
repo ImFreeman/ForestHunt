@@ -1,18 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
-public class BehaviorState : MonoBehaviour
+public enum BehaviorStateType
 {
-    // Start is called before the first frame update
-    void Start()
+    Active,
+    Passive
+}
+
+public class BehaviorState : IBehaviorState
+{
+    private BehaviorStateType _stateType;
+
+    public BehaviorStateType StateType
     {
-        
+        get => _stateType;
+        protected set { _stateType = value; }
+    }
+    
+    public virtual void OnEntry()
+    {
+        throw new NotImplementedException();
     }
 
-    // Update is called once per frame
-    void Update()
+    public virtual void OnExit()
     {
-        
+        throw new NotImplementedException();
     }
 }

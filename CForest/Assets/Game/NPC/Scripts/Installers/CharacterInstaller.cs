@@ -12,7 +12,7 @@ public class CharacterInstaller : Installer<CharacterInstaller>
             .AsSingle();
         
         Container
-            .BindFactory<BehaviorStateMachineProtocol, BehaviorStateMachine, BehaviorStateMachine.Factory>()
+            .BindFactory<BehaviorStateMachine, BehaviorStateMachine.Factory>()
             .AsSingle();
         
         Container

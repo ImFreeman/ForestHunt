@@ -3,26 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public struct BehaviorStateMachineProtocol
-{
-    public CharacterController CharacterController;
-
-    public BehaviorStateMachineProtocol(CharacterController characterController)
-    {
-        CharacterController = characterController;
-    }
-}
-
 public class BehaviorStateMachine
-{
-    private CharacterController _characterController;
-    
-    public BehaviorStateMachine(BehaviorStateMachineProtocol protocol)
+{    
+    private IBehaviorState _currentState;
+
+    public void ChangeState(IBehaviorState newState)    
     {
-        _characterController = protocol.CharacterController;
+        if (_currentState != null)
+        {
+            _currentState.OnExit();
+        }        
+        _currentState = newState;
+        _currentState.OnEntry();
     }
 
-    public class Factory : PlaceholderFactory<BehaviorStateMachineProtocol, BehaviorStateMachine>
+    public class Factory : PlaceholderFactory<BehaviorStateMachine>
     {
         
     }
