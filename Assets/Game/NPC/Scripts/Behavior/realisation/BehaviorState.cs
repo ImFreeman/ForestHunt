@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 public enum BehaviorStateType
@@ -13,6 +14,8 @@ public enum BehaviorStateType
 public class BehaviorState : IBehaviorState
 {
     private BehaviorStateType _stateType;
+
+    public GUID ID;
 
     public BehaviorStateType StateType
     {

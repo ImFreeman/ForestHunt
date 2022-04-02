@@ -8,7 +8,7 @@ public class CharacterInstaller : Installer<CharacterInstaller>
     public override void InstallBindings()
     {
         Container
-            .BindFactory<CharacterControllerProtocol, CharacterController, CharacterController.Factory>()
+            .BindFactory<CharacterControllerProtocol, CharacterMoveController, CharacterMoveController.Factory>()
             .AsSingle();
         
         Container

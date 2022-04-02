@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Zenject;
 
 public struct CharacterSpawnProtocol
 {
@@ -19,43 +21,54 @@ public struct CharacterSpawnProtocol
 
 public class Character
 {
-    public CharacterController Controller;
-    public BehaviorStateMachine BehaviorStateMachine;
+    public BehaviorStateMachine MicroBehaviorStateMachine;
+    public BehaviorStateMachine MacroBehaviorStateMachine;
+    public CharacterView View;
 
-    public Character(BehaviorStateMachine behaviorStateMachine, CharacterController controller)
+    public Character(BehaviorStateMachine macroBehaviorStateMachine, BehaviorStateMachine microBehaviorStateMachine, CharacterView view)
     {
-        Controller = controller;
-        BehaviorStateMachine = behaviorStateMachine;
+        View = view;
+        MicroBehaviorStateMachine = microBehaviorStateMachine;
+        MacroBehaviorStateMachine = macroBehaviorStateMachine;
     }
 }
 
 public class CharacterStorage
 {
     private Dictionary<GUID, Character> _dict = new Dictionary<GUID, Character>();
-    private CharacterController.Factory _controllerfactory;
+    private CharacterMoveController.Factory _controllerfactory;
     private BehaviorStateMachine.Factory _stateMachineFactory;
+    private IInstantiator _instantiator;
 
     public CharacterStorage(
-        CharacterController.Factory controllerfactory,
-        BehaviorStateMachine.Factory stateMachineFactory)
+        CharacterMoveController.Factory controllerfactory,
+        BehaviorStateMachine.Factory stateMachineFactory, IInstantiator instantiator)
     {
         _controllerfactory = controllerfactory;
         _stateMachineFactory = stateMachineFactory;
+        _instantiator = instantiator;
     }
 
     public void Spawn(CharacterSpawnProtocol protocol)
     {
-        var guid = new GUID();        
+        var guid = new GUID();
+        var view = Resources.Load($"Characters/{protocol.Name}");
+        var character = new Character
+        (           
+            _stateMachineFactory.Create(),
+            _stateMachineFactory.Create(),                        
+            _instantiator.InstantiatePrefabForComponent<CharacterView>(view)
+        );
+        character.View.BrainEvent += (object sender, BehaviorState state) =>
+        {
+            state.ID = guid;
+            character.MacroBehaviorStateMachine.ChangeState(state);
+        };
         _dict.Add
         (
             guid,
-            new Character
-            (
-                _stateMachineFactory.Create(),
-                _controllerfactory.Create(new CharacterControllerProtocol(protocol.Position, protocol.Name, guid))                
-            )
-        );
-        Debug.Log("s");
+            character
+        );        
     }
 
     public Character GetCharacter(GUID key)

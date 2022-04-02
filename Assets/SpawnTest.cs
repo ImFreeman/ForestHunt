@@ -6,6 +6,7 @@ using Zenject;
 public class SpawnTest : MonoBehaviour
 {
     private CharacterStorage _characterStorage;
+    public Vector3 Goal;
 
     [Inject]
     public void Inject(CharacterStorage characterStorage)

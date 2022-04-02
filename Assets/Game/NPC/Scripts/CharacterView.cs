@@ -10,25 +10,20 @@ public class CharacterView : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent navMeshAgent;
 
-    [SerializeField] private Brain brain;    
-    
-    private GUID _id;
+    [SerializeField] private Brain brain;
 
-    public GUID ID
+    public EventHandler<BehaviorState> BrainEvent;
+
+    private void Start()
     {
-        get => _id;
-        set 
-        {
-            _id = value;
-            brain.ID = value;
-        }
+        brain.ChangeStateEvent += (object sender, BehaviorState e) => { BrainEvent?.Invoke(sender, e); };
     }
 
     public NavMeshAgent NavMeshAgent => navMeshAgent;
 
-    public Vector3 Position
+    public Vector2 Position
     {
-        get => transform.position;
+        get => new Vector2(transform.position.x, transform.position.z);
         set => transform.position = value;
-    }
+    }    
 }

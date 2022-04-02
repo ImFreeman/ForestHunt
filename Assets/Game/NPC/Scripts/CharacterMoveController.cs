@@ -21,15 +21,15 @@ public struct CharacterControllerProtocol
     }
 }
 
-public class CharacterController
-{
+public class CharacterMoveController : BehaviorStateMachine
+ {
     private CharacterView _view;
     private IInstantiator _instantiator;
     private GUID ID;    
     private Random _random = new Random();
     
 
-    public CharacterController(
+    public CharacterMoveController(
         CharacterControllerProtocol protocol,
         IInstantiator instantiator)
     {
@@ -37,21 +37,22 @@ public class CharacterController
         var view = Resources.Load($"Characters/{protocol.ViewName}");
         _view = _instantiator.InstantiatePrefabForComponent<CharacterView>(view);
         _view.Position = protocol.Position;
-        ID = protocol.ID;
-        DOVirtual.DelayedCall(0.001f, () =>
-        {
-            _view.ID = ID;
-        });        
-        
-        //Walk(new Vector3(3.36f, 2.636933f, 6.72f));
+        ID = protocol.ID;                                
     }    
 
-    public void Walk(Vector2 goal)
+    public void WalkTo(Vector3 goal)
+    {        
+        _view.NavMeshAgent.SetDestination(goal);                
+    }
+
+    public void WalkAround()
     {
         var pos = _view.Position;
-        pos.x += goal.x;
-        pos.z += goal.y;
-        _view.NavMeshAgent.SetDestination(pos);
+        var x = _random.Next(0, 10);
+        var z = _random.Next(0, 10);
+        pos.x += x;
+        //pos.z += z;
+        WalkTo(pos);
     }
 
 
@@ -60,7 +61,7 @@ public class CharacterController
         Debug.Log("Ест");
     }
     
-    public class Factory : PlaceholderFactory<CharacterControllerProtocol, CharacterController>
+    public class Factory : PlaceholderFactory<CharacterControllerProtocol, CharacterMoveController>
     {
         
     }    

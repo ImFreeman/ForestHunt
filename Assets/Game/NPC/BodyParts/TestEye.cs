@@ -9,7 +9,8 @@ public class TestEye : BodyPart
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            SignalEvent?.Invoke(this, new BodyPartSignal(BodyPartRole.EnviromentInformation, new []{GameObject.Find("Food")}));
+            Food = GameObject.Find("Food");
+            SignalEvent?.Invoke(this, new BodyPartSignal(BodyPartRole.EnviromentInformation, new []{Food}));
         }
     }
 }

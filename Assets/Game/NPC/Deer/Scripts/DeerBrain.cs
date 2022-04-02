@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,8 +11,9 @@ public class DeerBrain : Brain
     }
 
     protected override void PassiveReaction()
-    {        
-        var state = _instantiator.Instantiate<FoodSearchState>(new []{new FoodSearchStateProtocol(_controller, this)});
-        _stateMachine.ChangeState(state);
-    }
+    {
+        var state = _instantiator.Instantiate<FoodSearchState>(new []{new FoodSearchStateProtocol(this)});
+        ChangeStateEvent?.Invoke(this, state);        
+        //_macroStateMachine.ChangeState(state);
+    }        
 }

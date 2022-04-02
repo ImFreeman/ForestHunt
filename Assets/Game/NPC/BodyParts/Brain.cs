@@ -28,22 +28,11 @@ public class Brain : MonoBehaviour
     private CharacterStorage _characterStorage;
 
     protected IInstantiator _instantiator;
-    protected BehaviorStateMachine _stateMachine;
-    protected CharacterController _controller;
+    //protected BehaviorStateMachine _macroStateMachine;    
     protected Dictionary<EnviromentObjectType, List<GameObject>> _enviromentInformation = new Dictionary<EnviromentObjectType, List<GameObject>>();
     protected List<NeedType> _needs = new List<NeedType>();
 
-    public GUID ID
-    {
-        get => _id;
-        set
-        {
-            _id = value;
-            var character = _characterStorage.GetCharacter(value);
-            _stateMachine = character.BehaviorStateMachine;
-            _controller = character.Controller;
-        }
-    }         
+    public EventHandler<BehaviorState> ChangeStateEvent;             
 
     [Inject]
     public void Inject(CharacterStorage characterStorage, IInstantiator instantiator)
