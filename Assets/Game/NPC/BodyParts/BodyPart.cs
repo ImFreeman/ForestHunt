@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public enum BodyPartRole
+public enum BodyPartSignalType
 {
     EnviromentInformation,
     Container,
@@ -12,21 +13,17 @@ public enum BodyPartRole
 
 public struct BodyPartSignal
 {
-    public BodyPartRole Role;
+    public BodyPartSignalType SignalType;
     public object[] Data;
 
-    public BodyPartSignal(BodyPartRole role, object[] data)
+    public BodyPartSignal(BodyPartSignalType signalType, object[] data)
     {
-        Role = role;
+        SignalType = signalType;
         Data = data;
     }
 }
 
 public class BodyPart : MonoBehaviour, IBodyPart
-{
-    [SerializeField] private BodyPartRole[] roles;
-
-    public BodyPartRole[] Roles => roles;
-
+{        
     public  EventHandler<BodyPartSignal> SignalEvent;
 }

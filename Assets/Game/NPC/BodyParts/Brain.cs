@@ -20,25 +20,20 @@ public enum NeedType
     Defecation
 }
 
-public class Brain : MonoBehaviour
+public class Brain : BodyPart
 {
-    [SerializeField] private BodyPart[] _bodyParts;
+    [SerializeField] private BodyPart[] _bodyParts;         
 
-    private GUID _id;
-    private CharacterStorage _characterStorage;
-
-    protected IInstantiator _instantiator;
-    //protected BehaviorStateMachine _macroStateMachine;    
+    protected IInstantiator _instantiator;    
     protected Dictionary<EnviromentObjectType, List<GameObject>> _enviromentInformation = new Dictionary<EnviromentObjectType, List<GameObject>>();
     protected List<NeedType> _needs = new List<NeedType>();
 
-    public EventHandler<BehaviorState> ChangeStateEvent;             
+    public EventHandler<IBehaviorState> ChangeStateEvent;             
 
     [Inject]
     public void Inject(CharacterStorage characterStorage, IInstantiator instantiator)
     {
-        _instantiator = instantiator;
-        _characterStorage = characterStorage;
+        _instantiator = instantiator;        
 
         foreach (EnviromentObjectType key in Enum.GetValues(typeof(EnviromentObjectType)))
         {
@@ -58,18 +53,18 @@ public class Brain : MonoBehaviour
 
     private void SignalEventHandler(object sender, BodyPartSignal signal)
     {
-        switch (signal.Role)
+        switch (signal.SignalType)
         {
-            case BodyPartRole.EnviromentInformation:
+            case BodyPartSignalType.EnviromentInformation:
                 foreach (GameObject gameObject in signal.Data)
                 {
                     AddEnviromentMemory(gameObject);
                 }
                 break;
-            case BodyPartRole.Movement:
+            case BodyPartSignalType.Movement:
                 // todo: Обрабатывать повреждение конечностей, использовать HealthHandler
                 break;
-            case BodyPartRole.Container:
+            case BodyPartSignalType.Container:
                 foreach (NeedType need in signal.Data)
                 {
                     AddNeed(need);
@@ -103,17 +98,17 @@ public class Brain : MonoBehaviour
         if (!_needs.Contains(need))
         {
             _needs.Add(need);
-            PassiveReaction();
+            PassiveReaction(need);
         }
     }
 
     protected virtual void ActiveReaction(EnviromentObjectType type, GameObject gameObject)
     {
-        
+        Debug.Log("There no active reaction!");
     }
 
-    protected virtual void PassiveReaction()
+    protected virtual void PassiveReaction(NeedType need)
     {
-                
+        Debug.Log("There no passive reaction!");        
     }
 }

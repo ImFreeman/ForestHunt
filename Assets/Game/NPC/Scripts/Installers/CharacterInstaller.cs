@@ -6,11 +6,7 @@ using Zenject;
 public class CharacterInstaller : Installer<CharacterInstaller>
 {    
     public override void InstallBindings()
-    {
-        Container
-            .BindFactory<CharacterControllerProtocol, CharacterMoveController, CharacterMoveController.Factory>()
-            .AsSingle();
-        
+    {                
         Container
             .BindFactory<BehaviorStateMachine, BehaviorStateMachine.Factory>()
             .AsSingle();

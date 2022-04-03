@@ -4,47 +4,40 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
 using Game.NPC.Deer.Scripts.States;
+using UnityEditor;
 using UnityEngine;
 using Zenject;
 
-public class FoodSearchStateProtocol
-{
-    public Brain Brain;    
-
-    public FoodSearchStateProtocol(Brain brain)
-    {        
-        Brain = brain;
-    }
-}
-
-public class FoodSearchState : BehaviorState, ITickable
-{
-    private readonly CharacterStorage _storage;
+public class FoodSearchState : IBehaviorState, ITickable
+{    
     private readonly Brain _brain;    
     private readonly IInstantiator _instantiator;
-    private readonly TickableManager _tickableManager;
-    private readonly BehaviorStateMachine _microBehaviorStateMachine;
+    private readonly TickableManager _tickableManager;    
 
     private WalkAroundCommand _walkAroundCommand;
+
+    private List<ICommand> _commands = new List<ICommand>();
     
-    public FoodSearchState(FoodSearchStateProtocol protocol, IInstantiator instantiator, TickableManager tickableManager, CharacterStorage storage)
+    public FoodSearchState(Brain brain, IInstantiator instantiator, TickableManager tickableManager)
     {
-        _brain = protocol.Brain;        
+        _brain = brain;        
         _instantiator = instantiator;
-        _tickableManager = tickableManager;
-        _storage = storage;
-        _microBehaviorStateMachine = _storage.GetCharacter(ID).MicroBehaviorStateMachine;
+        _tickableManager = tickableManager;        
     }
-    
-    public override void OnEntry()
+
+    public GUID ID { get; set; }
+
+    public void OnEntry()
     {
-        _tickableManager.Add(this);
-        StateType = BehaviorStateType.Passive;        
+        _tickableManager.Add(this);        
     }    
 
-    public override void OnExit()
+    public void OnExit()
     {
-        
+        foreach (var command in _commands)
+        {
+            command.Cancel();
+        }
     }
 
     public void Tick()
@@ -52,11 +45,11 @@ public class FoodSearchState : BehaviorState, ITickable
         var foodList = _brain.GetInformationAboutEnviroment(EnviromentObjectType.Food);
         if (foodList.Count > 0)
         {
-            _walkAroundCommand.Cancel();
-
+            _walkAroundCommand.Cancel();            
             var command = _instantiator.Instantiate<GoToObjectCommand>();
             command.Destination = foodList[0].transform.position;
-
+            _commands = new List<ICommand>();
+            _commands.Add(command);
             command.Do();
         }
         else
@@ -64,6 +57,7 @@ public class FoodSearchState : BehaviorState, ITickable
             if (_walkAroundCommand == null)
             {
                 _walkAroundCommand = _instantiator.Instantiate<WalkAroundCommand>();
+                _commands.Add(_walkAroundCommand);
                 _walkAroundCommand.ID = ID;
                 _walkAroundCommand.Do();
             }

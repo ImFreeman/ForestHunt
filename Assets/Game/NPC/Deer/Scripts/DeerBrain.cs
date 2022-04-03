@@ -10,10 +10,18 @@ public class DeerBrain : Brain
         
     }
 
-    protected override void PassiveReaction()
+    protected override void PassiveReaction(NeedType need)
     {
-        var state = _instantiator.Instantiate<FoodSearchState>(new []{new FoodSearchStateProtocol(this)});
-        ChangeStateEvent?.Invoke(this, state);        
-        //_macroStateMachine.ChangeState(state);
+        switch (need)
+        {
+            case NeedType.Hunger:
+                var state = _instantiator.Instantiate<FoodSearchState>(new []{this});
+                ChangeStateEvent?.Invoke(this, state);
+                break;
+            case NeedType.Fatigue:
+                break;
+            case NeedType.Defecation:
+                break;
+        }                        
     }        
 }

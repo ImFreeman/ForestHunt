@@ -10,8 +10,7 @@ public class GoToObjectCommand : Command, ITickable
 {
     private CharacterStorage _storage;
     private CharacterView _view;
-    private TickableManager _tickableManager;
-    private NavMeshPath _path;    
+    private TickableManager _tickableManager;        
     
     public GUID ID;
     public Vector3 Destination;

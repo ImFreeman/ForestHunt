@@ -12,18 +12,18 @@ public class CharacterView : MonoBehaviour
 
     [SerializeField] private Brain brain;
 
-    public EventHandler<BehaviorState> BrainEvent;
+    public EventHandler<IBehaviorState> BrainEvent;
 
     private void Start()
     {
-        brain.ChangeStateEvent += (object sender, BehaviorState e) => { BrainEvent?.Invoke(sender, e); };
+        brain.ChangeStateEvent += (object sender, IBehaviorState e) => { BrainEvent?.Invoke(sender, e); };
     }
 
     public NavMeshAgent NavMeshAgent => navMeshAgent;
 
-    public Vector2 Position
-    {
-        get => new Vector2(transform.position.x, transform.position.z);
+    public Vector3 Position
+    {        
+        get => transform.position;
         set => transform.position = value;
     }    
 }

@@ -8,7 +8,7 @@ public class TestStomach : BodyPart
     {
         if (Input.GetKeyDown(KeyCode.S))
         {
-            SignalEvent?.Invoke(this, new BodyPartSignal(BodyPartRole.Container, new [] {NeedType.Hunger as object}));
+            SignalEvent?.Invoke(this, new BodyPartSignal(BodyPartSignalType.Container, new [] {NeedType.Hunger as object}));
         }
     }
 }

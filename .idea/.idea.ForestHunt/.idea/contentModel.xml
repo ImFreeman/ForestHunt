@@ -54,10 +54,6 @@
             </e>
             <e p="Deer" t="Include">
               <e p="Scripts" t="Include">
-                <e p="Commands" t="Include">
-                  <e p="GoToObjectCommand.cs" t="Include" />
-                  <e p="WalkAroundCommand.cs" t="Include" />
-                </e>
                 <e p="DeerBrain.cs" t="Include" />
                 <e p="States" t="Include">
                   <e p="FoodSearchState.cs" t="Include" />
@@ -75,9 +71,12 @@
                 </e>
               </e>
               <e p="CharacterHealthHandler.cs" t="Include" />
-              <e p="CharacterMoveController.cs" t="Include" />
               <e p="CharacterStorage.cs" t="Include" />
               <e p="CharacterView.cs" t="Include" />
+              <e p="Commands" t="Include">
+                <e p="GoToObjectCommand.cs" t="Include" />
+                <e p="WalkAroundCommand.cs" t="Include" />
+              </e>
               <e p="Installers" t="Include">
                 <e p="CharacterInstaller.cs" t="Include" />
               </e>

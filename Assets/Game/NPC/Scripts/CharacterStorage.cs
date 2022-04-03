@@ -20,31 +20,27 @@ public struct CharacterSpawnProtocol
 }
 
 public class Character
-{
-    public BehaviorStateMachine MicroBehaviorStateMachine;
+{    
     public BehaviorStateMachine MacroBehaviorStateMachine;
     public CharacterView View;
 
-    public Character(BehaviorStateMachine macroBehaviorStateMachine, BehaviorStateMachine microBehaviorStateMachine, CharacterView view)
+    public Character(BehaviorStateMachine macroBehaviorStateMachine, CharacterView view)
     {
-        View = view;
-        MicroBehaviorStateMachine = microBehaviorStateMachine;
+        View = view;        
         MacroBehaviorStateMachine = macroBehaviorStateMachine;
     }
 }
 
 public class CharacterStorage
 {
-    private Dictionary<GUID, Character> _dict = new Dictionary<GUID, Character>();
-    private CharacterMoveController.Factory _controllerfactory;
+    private Dictionary<GUID, Character> _dict = new Dictionary<GUID, Character>();    
     private BehaviorStateMachine.Factory _stateMachineFactory;
     private IInstantiator _instantiator;
 
-    public CharacterStorage(
-        CharacterMoveController.Factory controllerfactory,
-        BehaviorStateMachine.Factory stateMachineFactory, IInstantiator instantiator)
-    {
-        _controllerfactory = controllerfactory;
+    public CharacterStorage(        
+        BehaviorStateMachine.Factory stateMachineFactory,
+        IInstantiator instantiator)
+    {        
         _stateMachineFactory = stateMachineFactory;
         _instantiator = instantiator;
     }
@@ -55,11 +51,10 @@ public class CharacterStorage
         var view = Resources.Load($"Characters/{protocol.Name}");
         var character = new Character
         (           
-            _stateMachineFactory.Create(),
             _stateMachineFactory.Create(),                        
             _instantiator.InstantiatePrefabForComponent<CharacterView>(view)
         );
-        character.View.BrainEvent += (object sender, BehaviorState state) =>
+        character.View.BrainEvent += (object sender, IBehaviorState state) =>
         {
             state.ID = guid;
             character.MacroBehaviorStateMachine.ChangeState(state);
